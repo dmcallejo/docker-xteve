@@ -3,6 +3,8 @@ FROM alpine:latest
 CMD ["/home/xteve/xteve_linux"] 
 
 LABEL MAINTAINER=dmcallejo
+LABEL VERSION=1.4.4
+LABEL COMMIT_DATE=2019-06-14_16:33:32
 
 EXPOSE 34400   
 
