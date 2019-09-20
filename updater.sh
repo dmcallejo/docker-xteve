@@ -5,7 +5,7 @@ REGEX='Content-Length: ([0-9]+)'
 REGEX_VERSION='Version: +([\.0-9]+)'
 XTEVE_FILENAME=xteve_linux
 
-output=$(curl -L --head --fail -s $URL | grep Content-Length)
+output=$(curl -k -L --head --fail -s $URL | grep Content-Length)
 
 [[ $output =~ $REGEX ]]
 content_length=${BASH_REMATCH[1]}

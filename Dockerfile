@@ -1,10 +1,10 @@
 FROM alpine:latest
 
-CMD ["/home/xteve/xteve_linux"] 
+CMD ["/home/xteve/xteve"] 
 
 LABEL MAINTAINER=dmcallejo
-LABEL VERSION=1.4.4
-LABEL COMMIT_DATE=2019-07-08_14:04:08
+LABEL VERSION=2.0.3
+LABEL COMMIT_DATE=2019-09-20_09:12:08
 
 ENV UID=1000
 ENV GID=1000
@@ -18,10 +18,16 @@ RUN addgroup -g $UID -S xteve \
 USER xteve
 WORKDIR /home/xteve
 
-RUN wget -q https://xteve.de/download/xteve_linux \
-	&& chmod +x xteve_linux \
-	&& mkdir -p xteve \
-	&& mkdir -p /tmp/xteve   
+RUN wget -q https://xteve.de/download/xteve_2_linux_amd64.zip -O xteve_linux.zip \
+	&& unzip xteve_linux.zip \
+	&& rm xteve_linux.zip \
+	&& chmod +x xteve \
+	&& mkdir -p config \
+	&& mkdir -p /tmp/xteve \
+	&& rm -rf /var/cache/apk/*
+
+HEALTHCHECK --interval=1m --timeout=3s \
+  CMD curl --fail http://localhost:33440/web || exit 1
 
 VOLUME ["/tmp/xteve/"]
-VOLUME ["/home/xteve/xteve"]
+VOLUME ["/home/xteve/config"]
