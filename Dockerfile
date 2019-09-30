@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-CMD ["/home/xteve/xteve"] 
+CMD ["/usr/local/bin/xteve"] 
 
 LABEL MAINTAINER=dmcallejo
 LABEL VERSION=2.0.3
@@ -15,16 +15,19 @@ RUN addgroup -g $UID -S xteve \
 	&& adduser -u $GID -S xteve -G xteve \
 	&& apk add --no-cache ca-certificates
 
+RUN wget -q https://xteve.de/download/xteve_2_linux_amd64.zip -O /tmp/xteve_linux.zip \
+	&& unzip /tmp/xteve_linux.zip -d /tmp/ \
+	&& mkdir -p /usr/local/bin \
+	&& mv /tmp/xteve /usr/local/bin \
+	&& chmod +x /usr/local/bin/xteve \
+	&& rm /tmp/xteve_linux.zip \
+	&& rm -rf /var/cache/apk/*
+
 USER xteve
 WORKDIR /home/xteve
 
-RUN wget -q https://xteve.de/download/xteve_2_linux_amd64.zip -O xteve_linux.zip \
-	&& unzip xteve_linux.zip \
-	&& rm xteve_linux.zip \
-	&& chmod +x xteve \
-	&& mkdir -p config \
-	&& mkdir -p /tmp/xteve \
-	&& rm -rf /var/cache/apk/*
+RUN mkdir -p config \
+	&& mkdir -p /tmp/xteve 
 
 HEALTHCHECK --interval=1m --timeout=3s \
   CMD curl --fail http://localhost:33440/web || exit 1
