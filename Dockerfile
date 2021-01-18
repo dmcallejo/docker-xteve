@@ -13,7 +13,7 @@ EXPOSE 34400
 
 RUN addgroup -g $UID -S xteve \
 	&& adduser -u $GID -S xteve -G xteve \
-	&& apk add --no-cache ca-certificates
+	&& apk add --no-cache ca-certificates curl
 
 RUN wget -q https://xteve.de/download/xteve_2_linux_amd64.zip -O /tmp/xteve_linux.zip \
 	&& unzip /tmp/xteve_linux.zip -d /tmp/ \
@@ -30,7 +30,7 @@ RUN mkdir -p config \
 	&& mkdir -p /tmp/xteve 
 
 HEALTHCHECK --interval=1m --timeout=3s \
-  CMD curl --fail http://localhost:33440/web || exit 1
+  CMD curl --fail -sS http://localhost:34400/web/ >/dev/null || exit 1
 
 VOLUME ["/tmp/xteve/"]
 VOLUME ["/home/xteve/config"]
